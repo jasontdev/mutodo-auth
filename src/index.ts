@@ -2,16 +2,19 @@ import dotenv from 'dotenv';
 import express from 'express';
 import type { Request, Response } from 'express';
 import { identityRepository } from './identity-repository';
-import createJwt from './jwt';
+import { createJwt, getJwtSecret } from './jwt';
 import { generateSalt, hashPassword, validate } from './password';
-
-dotenv.config();
 
 interface IdentityInput {
   password: string;
   email: string;
   role: string;
 }
+
+console.log('Starting mutado/auth');
+
+dotenv.config();
+const jwtSecret = getJwtSecret();
 
 const app = express();
 app.use(express.json());
@@ -41,7 +44,6 @@ app.post('/login', async (req: Request, res: Response) => {
     if (await validate(req.body.password, password)) {
       const { id, role, email } = user;
       // TODO need get jwtSecret from podman secret file when in production
-      const jwtSecret = process.env.JWT_SECRET ? process.env.JWT_SECRET : '';
       const jwt = createJwt({ id, role, email }, jwtSecret);
       res.send({ jwt });
     } else {
