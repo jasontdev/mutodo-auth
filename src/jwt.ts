@@ -6,8 +6,10 @@ interface PublicIdentity {
   email: string;
 }
 
-export default function createJwt({ id, email, role }: PublicIdentity) {
-  const secret = process.env.JWT_SECRET;
+export default function createJwt(
+  { id, email, role }: PublicIdentity,
+  secret: string
+) {
   const payload = {
     role,
     email

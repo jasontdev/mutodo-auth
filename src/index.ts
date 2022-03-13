@@ -40,7 +40,9 @@ app.post('/login', async (req: Request, res: Response) => {
     const { password } = user;
     if (await validate(req.body.password, password)) {
       const { id, role, email } = user;
-      const jwt = createJwt({ id, role, email });
+      // TODO need get jwtSecret from podman secret file when in production
+      const jwtSecret = process.env.JWT_SECRET ? process.env.JWT_SECRET : '';
+      const jwt = createJwt({ id, role, email }, jwtSecret);
       res.send({ jwt });
     } else {
       res.sendStatus(401);
