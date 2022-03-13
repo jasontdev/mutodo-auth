@@ -15,5 +15,4 @@ model Identity {
     email       String @unique
     role        String
     password    String
-    salt        String
 }

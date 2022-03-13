@@ -2,8 +2,7 @@ import bcrypt from 'bcrypt';
 
 export function hashPassword(
   rawPassword: string,
-  salt: string,
-  secret: string
+  salt: string
 ): Promise<string> {
   return bcrypt.hash(rawPassword, salt);
 }
@@ -19,14 +18,15 @@ export function generateSalt(): Promise<string> {
 
 export async function validate(
   rawPassword: string,
-  hashedPassword: string,
-  salt: string
+  hashedPassword: string
 ): Promise<boolean> {
   return new Promise((resolve, reject) => {
-    hashPassword(rawPassword, salt, '')
-      .then((result: string) => {
-        resolve(result === hashedPassword);
-      })
-      .catch(() => reject());
+    bcrypt.compare(rawPassword, hashedPassword, (err, result) => {
+      if (err) {
+        reject();
+      } else {
+        resolve(result);
+      }
+    });
   });
 }

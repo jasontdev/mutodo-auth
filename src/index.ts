@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import { identityRepository } from './identity-repository';
 import createJwt from './jwt';
@@ -20,12 +19,11 @@ app.use(express.json());
 app.post('/register', async (req: Request, res: Response) => {
   const { password, email, role }: IdentityInput = req.body;
   const salt = await generateSalt();
-  const hashedPassword = await hashPassword(password, salt, '');
+  const hashedPassword = await hashPassword(password, salt);
   const newIdentity = {
     email,
     role,
-    password: hashedPassword,
-    salt
+    password: hashedPassword
   };
 
   try {
@@ -39,8 +37,8 @@ app.post('/register', async (req: Request, res: Response) => {
 app.post('/login', async (req: Request, res: Response) => {
   const user = await identityRepository.findByEmail(req.body.email);
   if (user != null) {
-    const { password, salt } = user;
-    if (await validate(req.body.password, password, salt)) {
+    const { password } = user;
+    if (await validate(req.body.password, password)) {
       const { id, role, email } = user;
       const jwt = createJwt({ id, role, email });
       res.send({ jwt });

@@ -5,19 +5,17 @@ export interface Identity {
   email: string;
   role: string;
   password: string;
-  salt: string;
 }
 
 export const identityRepository = {
   save: async (identity: Identity) => {
-    const { password, email, role, salt } = identity;
+    const { password, email, role } = identity;
     const prismaClient = getPrismaClient();
     const createdIdentity = await prismaClient.identity.create({
       data: {
         email,
         role,
-        password,
-        salt
+        password
       },
       select: {
         id: true,
@@ -37,7 +35,6 @@ export const identityRepository = {
         id: true,
         email: true,
         role: true,
-        salt: true,
         password: true
       }
     });
