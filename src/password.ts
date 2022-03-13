@@ -21,12 +21,11 @@ export async function validate(
   hashedPassword: string
 ): Promise<boolean> {
   return new Promise((resolve, reject) => {
-    bcrypt.compare(rawPassword, hashedPassword, (err, result) => {
-      if (err) {
-        reject();
-      } else {
+    bcrypt
+      .compare(rawPassword, hashedPassword)
+      .then((result) => {
         resolve(result);
-      }
-    });
+      })
+      .catch(() => reject());
   });
 }
