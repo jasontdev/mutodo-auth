@@ -23,7 +23,10 @@ export function createJwt({ id, email, role }: PublicIdentity, secret: string) {
   return '';
 }
 
-export function getJwtSecret() {
+export function getJwtSecret(): string | undefined {
+  // function should return undefined in the even that a secret cannot be
+  // found in /run/secrets/jwt-secret (production) or JWT_SECRET in .env
+  // (development and test)
   if (process.env.NODE_ENV === 'production') {
     fs.readFile('/run/secrets/jwt-secret', (err, data) => {
       if (err) {
@@ -35,7 +38,8 @@ export function getJwtSecret() {
       }
     });
   } else {
-    return process.env.JWT_SECRET ? process.env.JWT_SECRET : '';
+    if (process.env.JWT_SECRET) {
+      return process.env.JWT_SECRET;
+    }
   }
-  return '';
 }
