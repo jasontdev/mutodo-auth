@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import type { Request, Response } from 'express';
 import { identityRepository } from './identity-repository';
-import { createJwt, getJwtSecret } from './jwt';
+import { createJwt } from './jwt';
+import { getJwtSecret } from './secrets';
 import { generateSalt, hashPassword, validate } from './password';
 
 interface IdentityInput {
