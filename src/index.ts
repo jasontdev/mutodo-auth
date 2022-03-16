@@ -5,6 +5,7 @@ import { identityRepository } from './identity-repository';
 import { createJwt } from './jwt';
 import { getJwtSecret } from './secrets';
 import { generateSalt, hashPassword, validate } from './password';
+import { getDatabaseUrl } from './secrets';
 
 interface IdentityInput {
   password: string;
@@ -17,7 +18,8 @@ console.log('Starting mutado/auth');
 (async function () {
   try {
     dotenv.config();
-    const jwtSecret = await getJwtSecret();
+    global.jwtSecret = await getJwtSecret();
+    global.databaseUrl = await getDatabaseUrl();
 
     const app = express();
     app.use(express.json());
@@ -45,9 +47,9 @@ console.log('Starting mutado/auth');
       if (user != null) {
         const { password } = user;
         if (await validate(req.body.password, password)) {
-          if (jwtSecret) {
+          if (global.jwtSecret) {
             const { id, role, email } = user;
-            const jwt = createJwt({ id, role, email }, jwtSecret);
+            const jwt = createJwt({ id, role, email }, global.jwtSecret);
             res.send({ jwt });
           } else {
             res.sendStatus(500);
