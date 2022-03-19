@@ -24,7 +24,7 @@ console.log('Starting mutado/auth');
     const app = express();
     app.use(express.json());
 
-    app.post('/register', async (req: Request, res: Response) => {
+    app.post('/auth/register', async (req: Request, res: Response) => {
       const { password, email, role }: IdentityInput = req.body;
       const salt = await generateSalt();
       const hashedPassword = await hashPassword(password, salt);
@@ -42,7 +42,7 @@ console.log('Starting mutado/auth');
       }
     });
 
-    app.post('/login', async (req: Request, res: Response) => {
+    app.post('/auth/login', async (req: Request, res: Response) => {
       const user = await identityRepository.findByEmail(req.body.email);
       if (user != null) {
         const { password } = user;
