@@ -17,7 +17,7 @@ export function getJwtSecret(): Promise<string> {
       if (process.env.JWT_SECRET) {
         resolve(process.env.JWT_SECRET);
       } else {
-        reject('Cannot locate secret in .env');
+        reject('Cannot locate JWT_SECRET in .env');
       }
     }
   });
@@ -28,7 +28,7 @@ export async function getDatabaseUrl(): Promise<string> {
     if (process.env.NODE_ENV === 'production') {
       fs.readFile('/run/secrets/database-url', (err, data) => {
         if (err) {
-          reject('Cannot locate JWT secret at /run/secrets/database-url');
+          reject('Cannot locate database url at /run/secrets/database-url');
         } else {
           resolve(data.toString());
         }
@@ -37,7 +37,7 @@ export async function getDatabaseUrl(): Promise<string> {
       if (process.env.DATABASE_URL) {
         resolve(process.env.DATABASE_URL);
       } else {
-        reject();
+        reject('Cannot locate DATABASE_URL in .env');
       }
     }
   });
