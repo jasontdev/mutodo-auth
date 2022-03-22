@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 import type { Request, Response } from 'express';
 import { identityRepository } from './identity-repository';
 import { createJwt } from './jwt';
@@ -22,6 +23,7 @@ console.log('Starting mutado/auth');
     global.databaseUrl = await getDatabaseUrl();
 
     const app = express();
+    app.use(cors());
     app.use(express.json());
 
     app.post('/auth/register', async (req: Request, res: Response) => {

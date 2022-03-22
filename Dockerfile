@@ -1,6 +1,7 @@
 FROM node
-RUN git clone https://github.com/jasontdev/mutodo-auth.git /home/node/mutodo-auth
+RUN mkdir /home/node/mutodo-auth 
 WORKDIR /home/node/mutodo-auth
+COPY src package.json .
 RUN npm i
 RUN --mount=type=secret,id=database-url echo "DATABASE_URL=$(cat /run/secrets/database-url)" > .env
 RUN npx prisma generate
