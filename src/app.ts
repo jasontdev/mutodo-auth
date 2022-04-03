@@ -16,6 +16,8 @@ export default async function app(
   databaseUrl: string,
   jwtSecret: string
 ) {
+  // TODO: using globals here is highly undesirable. should be
+  // attached to express context instead
   global.jwtSecret = jwtSecret;
   global.databaseUrl = databaseUrl;
   try {
